@@ -1,0 +1,11 @@
+int var_a = $0F;
+
+org ($000010)
+while(var_a >= 2) {
+	// si var_a est pair
+	if(var_a MOD %10 == 0) {
+		println("writing " + {var_a - 1} + " times byte " + hex(var_a) + " at offset " + hex(pc()));
+		fill {var_a}, {var_a - 1}		
+	}
+	var_a = var_a - 1;
+}

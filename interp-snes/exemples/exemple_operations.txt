@@ -1,0 +1,60 @@
+println("3 * 8 / 6 = " + {3 * 8 / 6});
+println();
+
+println("{2 + 5} * {5 - 2} = " + {2 + 5} * {5 - 2});
+println();
+
+println("8 / 3 = " + {8 / 3});
+println();
+
+println("8 MOD 5 = " + {8 MOD 5});
+println();
+
+println("$FF >> 2 = " + hex($FF >> 2));
+println();
+
+println("$FF << 3 = " + hex($FF << 3));
+println();
+
+println(bin(8) + " + " + bin(23) + " = " + bin(8 + 23));
+println();
+
+println(bin(7) + " | " + bin(80) + " = " + bin(7 | 80));
+println();
+
+println(bin(7) + " & " + bin(81) + " = " + bin(7 & 81));
+println();
+
+println(bin(12) + " ^ " + bin(63) + " = " + bin(12 ^ 63));
+println();
+
+println("21 < 20 = " + {21 < 20});
+println();
+
+println("20 <= 20 = " + {20 <= 20});
+println();
+
+println("20 == 20 = " + {20 == 20});
+println();
+
+println("21 != 21 = " + {21 != 21});
+println();
+
+println("21 >= 21 = " + {21 >= 21});
+println();
+
+println("21 > 21 = " + {21 > 21});
+println();
+
+println("{10 < 11} && {11 < 10} = " + {{10 < 11} && {11 < 10}});
+println();
+
+println("{10 < 11} || {11 < 10} = " + {{10 < 11} || {11 < 10}});
+println();
+
+println("{10 < 11} && {!{11 < 10}} = " + {{10 < 11} && {!{11 < 10}}});
+println();
+
+
+
+

@@ -1,0 +1,7 @@
+int var_a = $FF;
+
+while(var_a > 0) {
+	println("writing " + hex(var_a) + " at offset " + pc());
+	db {var_a}
+	var_a = var_a >> 1;
+}

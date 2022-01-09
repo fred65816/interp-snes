@@ -1,0 +1,4 @@
+// word operand
+
+// AD 33 22
+lda.w $112233

@@ -1,0 +1,317 @@
+Package assembler.syntax;
+
+Helpers
+
+	tab = 0x09;
+	lf = 0x0A;
+	cr = 0x0D;
+	sp = 0x20;
+	digit = ['0'..'9'];
+	hex_digit = [[['0'..'9'] + ['A'..'F']] + ['a'..'f']];
+	binary_digit = '0' | '1';
+	letter = [['A'..'Z'] + ['a'..'z']];
+	ident_char = letter | digit | '_';
+	ascii_char = [[[[0x20..0x7E] + [0xA1..0xAC]] + [0xAE..0xFF]] - '"'];
+	eol = lf | cr | cr lf;
+	
+Tokens
+
+	/* keywords */
+	
+	macro = 'macro';
+	scope = 'scope';
+	true = 'true';
+	false = 'false';
+	int = 'int';
+	bool = 'bool';
+	string = 'string';
+	org = 'org';
+	db = 'db';
+	dw = 'dw';
+	dl = 'dl';
+	hex = 'hex';
+	bin = 'bin';
+	fill = 'fill';
+	print = 'print';
+	println = 'println';
+	pc = 'pc';
+	namespace = 'namespace';
+	if = 'if';
+	while = 'while';
+	
+	/* operations */
+	
+	plus = '+';
+	minus = '-';
+	star = '*';
+	slash = '/';
+	mod = 'MOD';
+	shift_left = '<<';
+	shift_right = '>>';
+	and = '&';
+	or = '|';
+	xor = '^';
+	
+	/* numbers */
+	
+	binary = '%' binary_digit+;
+	hexadecimal = '$' hex_digit+;
+	decimal = digit+; 
+	
+	/* comparison */
+	
+	eq = '==';
+	not_eq = '!=';
+	lt = '<';
+	lt_eq = '<=';
+	gt = '>';
+	gt_eq = '>=';
+	not = '!';
+	
+	/* logical */
+	
+	log_and = '&&';
+	log_or = '||';
+	
+	
+	/* opcodes */
+	
+	lda = 'lda' | 'LDA';
+	sta = 'sta' | 'STA';
+	rts = 'rts' | 'RTS';
+	beq = 'beq' | 'BEQ';
+	rep = 'rep' | 'REP';
+	sep = 'sep' | 'SEP';
+	bne = 'bne' | 'BNE';
+	cmp = 'cmp' | 'CMP';
+	jmp = 'jmp' | 'JMP';
+	ldx = 'ldx' | 'LDX';
+	mvn = 'mvn' | 'MVN';
+	mvp = 'mvp' | 'MVP';
+	inc = 'inc' | 'INC';
+	dec = 'dec' | 'DEC';
+	
+	/* opcode args length */
+	
+	byte = '.b' | '.B';
+	word = '.w' | '.W';
+	long = '.l' |' .L';
+	
+	/* addressing */
+	
+	x_addr = ',x' | ',X';
+	y_addr = ',y' | ',Y';
+	s_addr = ',s' | ',S'; 
+	l_par = '(';
+	r_par = ')';
+	l_br = '[';
+	r_br = ']';
+	pound = '#';
+	acc = 'a' | 'A';
+	
+	/* others */
+	
+	l_cbr = '{';
+	r_cbr = '}';
+	sc = ';';
+	assign = '=';
+	tp = ':';
+	comma = ',';
+	forward = '++';
+	backward = '--';
+
+	ident = letter (ident_char)*;
+	str = '"' ascii_char* '"';
+	line_comment = '//' (ascii_char | tab)*;
+	blank = (tab | eol | sp)+;
+	
+Ignored Tokens
+	
+	blank, line_comment;
+	
+Productions
+	
+	prog =
+		 macros insts;
+		 
+	macros =
+		macro_decl*;
+	
+	insts =
+		inst*;
+		
+	macro_decl =
+		macro ident l_par params? r_par l_cbr body r_cbr;
+		
+	params =
+		param [additional_params]:additional_param*;
+	
+	additional_param =
+  		comma param;
+  		
+  	param =
+    	type ident;
+    	
+    type =
+    	{int} int |
+    	{bool} bool |
+    	{string} string;
+    	
+    body =
+    	[insts]:inst*;
+    
+	inst = 
+		{decl} type ident assign [exp]:negation sc |
+		{assign} ident assign [exp]:negation sc |
+		{if} if l_par [exp]:negation r_par l_cbr body r_cbr |
+		{while} while l_par [exp]:negation r_par l_cbr body r_cbr |
+		{org} org l_par [exp]:negation r_par |
+		{db} db byte_seqs |
+		{dw} dw byte_seqs |
+		{dl} dl byte_seqs |
+		{fill} fill [exp]:negation comma [number]:negation |
+		{label} ident tp |
+		{namespace} namespace ident l_cbr body r_cbr |
+		{macro_call} ident l_par args? r_par sc |
+		{print} print l_par [exp]:negation r_par sc |
+		{print_ln} println l_par [exp]:negation? r_par sc |
+		{opcode} opcode;
+		
+	args =
+		arg [additional_args]:additional_arg*;
+	
+	additional_arg =
+  		comma arg;
+  		
+  	arg =
+    	[exp]:negation;
+    	
+   	byte_seqs =
+   		byte_seq [additional_byte_seqs]:additional_byte_seq*;
+   	
+   	additional_byte_seq =
+   		comma byte_seq;
+   	
+   	byte_seq =
+   		{exp} l_cbr [exp]:negation r_cbr |
+   		{num} arg_num;
+		
+	opcode =
+		{beq} anon_label? beq branch_type |
+		{bne} anon_label? bne branch_type |
+		{cmp_abs} anon_label? cmp op_length? op_arg |
+		{cmp_const} anon_label? cmp op_length? pound op_arg |
+		{dec_acc} anon_label? dec acc |
+		{dec_abs} anon_label? dec op_length? op_arg |
+		{inc_acc} anon_label? inc acc |
+		{inc_abs} anon_label? inc op_length? op_arg |
+		{jmp} anon_label? jmp op_arg |
+		{lda_abs} anon_label? lda op_length? op_arg |
+		{lda_const} anon_label? lda op_length? pound op_arg |
+		{lda_ind_x} anon_label? lda op_length? op_arg x_addr |
+		{ldx_abs} anon_label? ldx op_length? op_arg |
+		{ldx_const} anon_label? ldx op_length? pound op_arg |
+		{mvn} anon_label? mvn [source]:op_arg comma [dest]:op_arg |
+		{mvp} anon_label? mvp [source]:op_arg comma [dest]:op_arg |
+		{rep} anon_label? rep pound op_arg |
+		{sep} anon_label? sep pound op_arg |
+		{sta_abs} anon_label? sta op_length? op_arg |
+		{sta_ind_x} anon_label? sta op_length? op_arg x_addr |
+		{rts} anon_label? rts;
+	
+	branch_type =
+		{plus} forward |
+		{minus} backward |
+		{ident} ident;
+		
+	anon_label =
+		{plus} forward |
+		{minus} backward;
+	
+	op_arg =
+		{exp} l_cbr [exp]:negation r_cbr |
+		{label} ident extra_arg? |
+		{num} arg_num;
+		
+	arg_num =
+		{binary} binary |
+		{hex} hexadecimal |
+		{decimal} decimal;
+		
+	extra_arg =
+		{add} plus extra_exp |
+		{sub} minus extra_exp;
+		
+	extra_exp =
+   		{exp} l_cbr [exp]:negation r_cbr |
+   		{num} number;
+		
+	op_length =
+		{byte} byte |
+		{word} word |
+		{long} long;
+	
+	negation =
+		{not} not [exp]:negation |
+		{simple} logical_op;
+		
+	logical_op =
+		{and} [left]:logical_op log_and [right]:comparison |
+		{or} [left]:logical_op log_or [right]:comparison |
+		{simple} comparison;
+		
+		
+	comparison =
+		{eq} [left]:comparison eq [right]:bitwise |
+		{not_eq} [left]:comparison not_eq [right]:bitwise |
+		{lt} [left]:comparison lt [right]:bitwise |
+		{lt_eq} [left]:comparison lt_eq [right]:bitwise |
+		{gt} [left]:comparison gt [right]:bitwise |
+		{gt_eq} [left]:comparison gt_eq [right]:bitwise |
+		{simple} bitwise;
+		
+	bitwise =
+		{and} [left]:bitwise and [right]:shift |
+		{or} [left]:bitwise or [right]:shift |
+		{xor} [left]:bitwise xor [right]:shift |
+		{simple} shift;
+		
+	shift =
+		{shift_left} [left]:shift shift_left [right]:additive_exp |
+		{shift_right} [left]:shift shift_right [right]:additive_exp |
+		{simple} additive_exp;
+
+	additive_exp = 
+		{add} [left]:additive_exp plus [right]:factor |
+		{sub} [left]:additive_exp minus [right]:factor |
+		{simple} factor;
+		
+	factor =
+		{mul} [left]:factor star [right]:term |
+		{div} [left]:factor slash [right]:term |
+		{mod} [left]:factor mod [right]:term |
+		{simple} term;
+		
+	term =
+		{num} number |
+		{string} str |
+		{true} true |
+		{false} false |
+		{var} ident |
+		{hex_str} hex l_par [exp]:negation r_par |
+		{bin_str} bin l_par [exp]:negation r_par |
+		{pc} pc l_par r_par |
+		{par} l_cbr [exp]:negation r_cbr;
+		
+	number =
+		{binary} minus? binary |
+		{hex} minus? hexadecimal |
+		{decimal} minus? decimal;
+	
+	
+	
+	
+	
+	
+	
+	

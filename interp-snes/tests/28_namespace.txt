@@ -1,0 +1,58 @@
+// A5 10
+
+// main
+// A5 11
+// A5 12
+// F0 FC
+
+// a
+// A5 13
+// A5 14
+// F0 FC
+
+// b
+// F0 08
+// A5 15
+// F0 F6
+// A5 16
+// F0 F8 (main)
+// F0 EE
+
+// a
+// A5 17
+// F0 EC
+
+// A5 18
+
+lda $10
+label_b:
+namespace main {
+	lda $11
+	label_a:
+	lda $12
+	beq label_a
+	label_d:
+	
+	namespace c {
+		label_a:
+		lda $13
+		label_b:
+		lda $14
+		beq label_b
+		
+		namespace b {
+			beq label_a
+			lda $15
+			beq label_b
+			lda $16
+			beq label_c
+			label_a:
+			beq label_d
+		}
+		
+		lda $17
+		beq label_b
+	}
+}
+lda $18
+label_c:

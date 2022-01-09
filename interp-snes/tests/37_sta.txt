@@ -1,0 +1,53 @@
+// valide
+
+org($000010)
+label_a:
+
+sta $10				// 85 10
+sta.w $10			// 8D 10 00
+sta.l $10			// 8F 10 00 00
+
+sta.b $112233		// 85 33
+sta.w $112233		// 8D 33 22
+
+sta {$80 + $80}		// 8D 00 01
+sta {$800 + $800}	// 8D 00 10
+sta {$8000 + $8000}	// 8F 00 00 01
+
+sta label_a			// 8F 10 00 00
+sta.b label_a		// 85 10
+sta.w label_a		// 8D 10 00
+sta.l label_a		// 8F 10 00 00
+
+sta.b {$81 + $81}		// 85 02
+sta.w {$8100 + $8100}	// 8D 00 02
+
+sta $10,x			// 95 10
+sta.w $10,x			// 9D 10 00
+sta.l $10,x			// 9F 10 00 00
+
+sta.b $112233,x		// 95 33
+sta.w $112233,x		// 9D 33 22
+
+sta {$80 + $80},x		// 9D 00 01
+sta {$800 + $800},x		// 9D 00 10
+sta {$8000 + $8000},x	// 9F 00 00 01
+
+sta label_a,x			// 9F 10 00 00
+sta.b label_a,x			// 95 10
+sta.w label_a,x			// 9D 10 00
+sta.l label_a,x			// 9F 10 00 00
+
+sta.b {$81 + $81},x		// 95 02
+sta.w {$8100 + $8100},x	// 9D 00 02
+
+
+// invalide
+
+// sta $00000000
+// sta {$FFFFFF + 1}
+// sta {-1}
+// sta $00000000,x
+// sta {$FFFFFF + 1},x
+// sta {-1},x
+

@@ -1,0 +1,8 @@
+// AF 33 22 11
+// A5 0A
+// AF 33 22 11
+
+lda $112233
+lda.b label_a
+lda $112233
+label_a:

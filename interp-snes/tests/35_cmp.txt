@@ -1,0 +1,61 @@
+// valide
+
+org($000010)
+label_a:
+
+cmp $10				// C5 10
+cmp.w $10			// CD 10 00
+cmp.l $10			// CF 10 00 00
+
+cmp.b $112233		// C5 33
+cmp.w $112233		// CD 33 22
+
+cmp {$80 + $80}		// CD 00 01
+cmp {$800 + $800}	// CD 00 10
+cmp {$8000 + $8000}	// CF 00 00 01
+
+cmp label_a			// CF 10 00 00
+cmp.b label_a		// C5 10
+cmp.w label_a		// CD 10 00
+cmp.l label_a		// CF 10 00 00
+
+cmp.b {$81 + $81}		// C5 02
+cmp.w {$8100 + $8100}	// CD 00 02
+
+cmp #$10			// C9 10
+cmp #$1000			// C9 00 10
+
+cmp.b #$1020		// C9 20
+cmp.w #$10			// C9 10 00
+
+cmp #{$80 + $80}	// C9 00 01
+cmp #{$800 + $800}	// C9 00 10
+
+cmp.b #{$81 + $81}		// C9 02
+cmp.w #{$8100 + $8100}	// C9 00 02
+
+cmp #label_a		// C9 10 00
+cmp.b #label_a		// C9 10
+cmp.w #label_a		// C9 10 00
+
+sep #$20 // E2 20 acc 8-bit
+cmp #$1020			// C9 20
+cmp.b #$3040		// C9 40 
+cmp.w #$50			// C9 50 00 attendu puisque .w a précéance
+
+rep #$20 // C2 20 acc 16-bit
+cmp #$10			// C9 10 00
+cmp.b #$3040		// C9 40 attendu puisque .b a précéance
+cmp.w #$50			// C9 50 00
+
+// invalide
+
+// cmp $00000000
+// cmp {$FFFFFF + 1}
+// cmp {-1}
+// cmp #{-1}
+// cmp #$000000
+// cmp #$10001
+// cmp.l #$00
+// cmp.l #label_a
+// cmp.l #{1 + 1}

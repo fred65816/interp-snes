@@ -1,0 +1,83 @@
+// valide
+
+org($000010)
+label_a:
+
+lda $10				// A5 10
+lda.w $10			// AD 10 00
+lda.l $10			// AF 10 00 00
+
+lda.b $112233		// A5 33
+lda.w $112233		// AD 33 22
+
+lda {$80 + $80}		// AD 00 01
+lda {$800 + $800}	// AD 00 10
+lda {$8000 + $8000}	// AF 00 00 01
+
+lda label_a			// AF 10 00 00
+lda.b label_a		// A5 10
+lda.w label_a		// AD 10 00
+lda.l label_a		// AF 10 00 00
+
+lda.b {$81 + $81}		// A5 02
+lda.w {$8100 + $8100}	// AD 00 02
+
+lda $10,x				// B5 10
+lda.w $10,x				// BD 10 00
+lda.l $10,x				// BF 10 00 00
+
+lda.b $112233,x		// B5 33
+lda.w $112233,x		// BD 33 22
+
+lda {$80 + $80},x		// BD 00 01
+lda {$800 + $800},x		// BD 00 10
+lda {$8000 + $8000},x	// BF 00 00 01
+
+lda label_a,x			// BF 10 00 00
+lda.b label_a,x			// B5 10
+lda.w label_a,x			// BD 10 00
+lda.l label_a,x			// BF 10 00 00
+
+lda.b {$81 + $81},x		// B5 02
+lda.w {$8100 + $8100},x	// BD 00 02
+
+lda #$10			// A9 10
+lda #$1000			// A9 00 10
+
+lda.b #$1020		// A9 20
+lda.w #$10			// A9 10 00
+
+lda #{$80 + $80}	// A9 00 01
+lda #{$800 + $800}	// A9 00 10
+
+lda.b #{$81 + $81}		// A9 02
+lda.w #{$8100 + $8100}	// A9 00 02
+
+lda #label_a		// A9 10 00
+lda.b #label_a		// A9 10
+lda.w #label_a		// A9 10 00
+
+sep #$20 // E2 20 acc 8-bit
+lda #$1020			// A9 20
+lda.b #$3040		// A9 40 
+lda.w #$50			// A9 50 00 attendu puisque .w a précéance
+
+rep #$20 // C2 20 acc 16-bit
+lda #$10			// A9 10 00
+lda.b #$3040		// A9 40 attendu puisque .b a précéance
+lda.w #$50			// A9 50 00
+
+// invalide
+
+// lda $00000000
+// lda {$FFFFFF + 1}
+// lda {-1}
+// lda $00000000,x
+// lda {$FFFFFF + 1},x
+// lda {-1},x
+// lda #{-1}
+// lda #$000000
+// lda #$10001
+// lda.l #$00
+// lda.l #label_a
+// lda.l #{1 + 1}

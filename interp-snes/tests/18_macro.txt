@@ -1,0 +1,14 @@
+// A5 10
+// A5 11
+// A5 12
+// A5 11
+// A5 12
+
+macro macro_a() {
+	lda $11
+	lda $12
+}
+
+lda $10
+macro_a();
+macro_a();

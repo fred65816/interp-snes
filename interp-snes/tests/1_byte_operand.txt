@@ -1,0 +1,4 @@
+// byte operand on 24-bit number
+
+// A5 33
+lda.b $112233

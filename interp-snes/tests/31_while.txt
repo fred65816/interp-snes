@@ -1,0 +1,8 @@
+
+
+int var_a = $FF;
+
+while(var_a > 0) {
+	db {var_a}
+	var_a = var_a >> 1;
+}

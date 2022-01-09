@@ -1,0 +1,13 @@
+-- lda $10		// A5 10
+beq ++			// F0 02 (ligne 4)
+lda $11			// A5 11
+++ sta $12		// 85 12
+bne --			// D0 F6 (ligne 1)
+-- lda $13		// A5 13
+lda $14			// A5 14
+beq --			// F0 FA (ligne 6)
+lda $15			// A5 15
+beq ++			// F0 02 (ligne 12)
+lda $16			// A5 16
+++ sta $16		// 85 16
+

@@ -1,0 +1,10 @@
+// AF 33 22 11
+// AF 33 22 11
+// AD 04 00
+// A5 10
+
+lda $112233
+label_a:
+lda $112233
+lda.w label_a
+lda $10

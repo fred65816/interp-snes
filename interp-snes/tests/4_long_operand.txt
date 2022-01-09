@@ -1,0 +1,4 @@
+// long operand
+
+// AF 22 11 00
+lda.l $1122

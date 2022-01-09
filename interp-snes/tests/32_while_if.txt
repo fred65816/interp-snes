@@ -1,0 +1,11 @@
+
+
+int var_a = $0F;
+
+while(var_a >= 2) {
+	if(var_a MOD %10 == 0) {
+		fill {var_a}, {var_a - 1}
+	}
+	dl {var_a}
+	var_a = var_a - 1;
+}

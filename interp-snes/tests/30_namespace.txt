@@ -1,0 +1,46 @@
+// main()
+// A5 14
+
+// macro_a()
+// A5 11
+// F0 FC
+// A5 12
+// F0 FC
+// A5 13
+// F0 F4
+// F0 F0
+
+// main()
+// A5 15
+
+// macro_a()
+// A5 11
+// F0 FC
+// A5 12
+// F0 FC
+// A5 13
+// F0 F4
+// F0 F0
+
+
+macro macro_a() {
+	namespace c {
+		label_a:
+		lda $11
+		beq label_a
+		namespace b {
+			label_a:
+			lda $12
+			beq label_a		
+		}
+		lda $13
+		beq label_a
+	}
+	beq label_a
+}
+
+label_a:
+lda $14
+macro_a();
+lda $15
+macro_a();

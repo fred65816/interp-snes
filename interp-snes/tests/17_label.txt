@@ -1,0 +1,22 @@
+// A5 10
+// F0 06
+// A5 11
+// F0 02
+// A5 12
+// A5 13
+// F0 FC
+// A5 14
+// F0 F8
+
+label_b:
+lda $10
+beq label_a
+lda $11
+beq label_a
+lda $12
+label_a:
+lda $13
+beq label_a
+lda $14
+beq label_a
+label_c:

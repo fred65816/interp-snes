@@ -1,0 +1,4 @@
+// word operand
+
+// AD 11 00
+lda.w $11

@@ -1,0 +1,23 @@
+// A5 10
+// A5 11
+// F0 FC
+// A5 12
+// F0 F8
+// A5 11
+// F0 FC
+// A5 12
+// F0 F8
+// AF 33 22 11
+
+macro macro_a() {
+	label_a:
+	lda $11
+	beq label_a
+	lda $12
+	beq label_a
+}
+
+lda $10
+macro_a();
+macro_a();
+lda $112233

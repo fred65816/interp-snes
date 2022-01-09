@@ -1,0 +1,69 @@
+macro macro_a(int int_a, int int_b, bool bool_a) {
+	int int_c = 5;
+	
+	-- sta $1000	// 8D 00 10
+	
+	if({int_c == int_a} && bool_a) {
+	
+		println("in macro_a if at offset " + hex(pc()));
+		
+		rep #$20	// C2 20 accumulateur 16-bit
+		bne --		// D0 F9 branchement à la ligne 4
+		
+		int_c = int_c + 1;
+	}
+	
+	namespace ns_a {
+		label_a:
+		lda #$08		// A9 08 00 mode 16-bit
+		cmp.b #$03		// C9 03
+		beq label_a		// F0 F9 branchement à la ligne 17
+		lda $1010		// AD 10 10
+		beq ++			// F0 04 branchement a la ligne 26
+	}
+	
+	lda.l {int_c}		// AF 06 00 00
+	++ sta.b $1112		// 85 12
+	sep #$20			// E2 20 accumulateur 8-bit
+	bne label_a			// D0 0C branchement à la ligne 60
+	
+	macro_b(int_c);	
+}
+
+macro macro_b(int var_a) {
+	while(var_a > 0) {
+		dw {var_a + 1}	// 07 00, 06 00, 05 00..
+		var_a = var_a - 1;
+	}
+}
+
+// variables
+int int_a = 2 * 2;				// 4
+int int_b = int_a * 2 - 1;		// 7
+bool bool_a = {int_a < int_b};	// true
+
+// main
+org($000010)
+bool bool_b = {int_a MOD int_b} == pc();	// false
+
+ldx.w #{int_a + 1}		// A0 05 00
+lda.l $10				// AF 10 00 00
+inc a					// 1A
+cmp #$04				// C9 04
+
+macro_a(int_a + 1, int_b, bool_a);
+
+if(bool_b) {
+	macro_a(int_b, int_a, bool_a);
+}
+
+label_a:
+sta {int_b << 1}		// 85 0E
+int_b = int_b + 2;
+dec a					// 3A
+dec $12					// C6 12
+mvn {int_a}, {int_b}	// 54 04 09
+mvp {int_b}, {int_a}	// 44 09 04
+jmp $1288				// 4C 88 12
+inc $32					// E6 32
+rts						// 60
