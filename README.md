@@ -8,11 +8,11 @@ Interp SNES n'est pas complet, il peut compiler de texte à binaire une quinzain
 
 ## Usage
 
-Pour utiliser Interp SNES, il faut en premier lieu compiler les classe java de la grammaire [src/assembler.sablecc](src/assembler.sablecc). Pour ce faire il faut utiliser la commande `sablecc assembler.sablecc`. Il faut ensuite compiler le code java du projet, ce qui dans mon cas était fait avec [l'IDE Eclipse](https://www.eclipse.org/ide/). Finalement, pour compiler un exemple dans le dossier `src/exemples`, lancer à la racine du dossier `src` la commande `java -cp bin assembler.Interp exemples/nomdufichier.txt`.
+Pour utiliser Interp SNES, il faut en premier lieu compiler les classe java de la grammaire [assembler.sablecc](interp-snes/assembler.sablecc). Pour ce faire il faut utiliser une commande telle que `path/to/sablecc assembler.sablecc` dans le dossier `interp-snes`. Il faut ensuite compiler le code java du projet, ce qui dans mon cas était fait avec [l'IDE Eclipse](https://www.eclipse.org/ide/). Finalement, pour compiler un exemple dans le dossier `interp-snes/exemples`, lancer à la racine du dossier `interp-snes` une commande telle que `java -cp bin assembler.Interp exemples/nomdufichier.txt`.
 
 ## Exemples et tests
 
-Le projet contient 5 fichiers d'exemple pour illustrer ce qu'il est possible de faire et 37 fichier tests qui peuvent être tous lancés avec la commande `./tests.sh` à la racine du dossier `src`. Un test compile le code du dossier `tests` et le compare ensuite avec le résultat binaire attendu correspondant dans le dossier `expected`.
+Le projet contient 5 fichiers d'exemple pour illustrer ce qu'il est possible de faire et 37 fichier tests qui peuvent être tous lancés avec la commande `./tests.sh` à la racine du dossier `interp-snes`. Un test compile le code du dossier `interp-snes/tests` et le compare ensuite avec le résultat binaire attendu correspondant dans le dossier `interp-snes/expected`.
 
 Par exemple voici le test #33 et sa sortie attendue:
 
